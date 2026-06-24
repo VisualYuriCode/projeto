@@ -1,0 +1,17 @@
+{
+    "name": "ryzen/meu-projeto-login",
+    "description": "Sistema de login MVC profissional",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/",
+            "Core\\": "core/"
+        }
+    },
+    "authors": [
+        {
+            "name": "YuriiClaudio",
+            "email": "guimeoplay@gmail.com"
+        }
+    ],
+    "require": {}
+}
