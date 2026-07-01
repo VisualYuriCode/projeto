@@ -40,11 +40,11 @@ class AuthController
     }
 
     // Exibe a tela restrita após o login (GET /home)
-    public function home(): void
+     public function home(): void
     {
         // O SEGURANÇA DA ROTA PROTEGIDA:
         // Se a variável 'usuario_logado' NÃO existir na sessão, ele não tem o crachá!
-        if (!isset($_SESSION['usuario_logado'])) {
+       /* if (!isset($_SESSION['usuario_logado'])) {
             
             // Manda de volta para o login com uma mensagem de aviso
             $_SESSION['erro_login'] = "⚠️ Você precisa fazer login para acessar essa página.";
@@ -53,9 +53,9 @@ class AuthController
         }
 
         // Se o código chegou até aqui, significa que ele tem o crachá. 
-        // Então, podemos carregar a tela (View) da Home
-        require_once __DIR__ . '/../Views/home.php';
-    }
+        // Então, podemos carregar a tela (View) da Home */
+        require_once __DIR__ . '/../Views/home.php'; 
+    } 
     
     // Exibe o formulário de Cadastro (GET /registrar)
     public function registerForm(): void 

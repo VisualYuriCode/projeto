@@ -1,32 +1,47 @@
 <?php
 
-session_start();
+// session_start(); // 💡 Dica: No futuro você pode apagar isso. JWT não usa sessão do PHP!
 
-// 1. Carrega o Autoload do Composer (A mágica que evita os 'require' manuais)
+// 1. Carrega o Autoload do Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Core\Router;
 use App\Controllers\AuthController;
+use App\Controllers\AuthApiController;
 use App\Controllers\PasswordController;
+use App\Middlewares\AuthMiddleware; // <-- Trouxemos o segurança para cá!
 
 $router = new Router();
 
-// --- DEFINIÇÃO DE ROTAS DA APLICAÇÃO ---
+// =======================================================
+// 🖥️ 1. ROTAS DE TELA (Frontend - Carregam o Visual)
+// =======================================================
+$router->get('/', [AuthController::class, 'loginForm']); 
+$router->get('/registrar', [AuthController::class, 'registerForm']); 
+$router->get('/esqueci-senha', [PasswordController::class, 'forgotForm']);
 
-// Rotas de Login
-$router->get('/', [AuthController::class, 'loginForm']);       // Tela de login
-$router->post('/login', [AuthController::class, 'login']);     // Processar o envio do login
+// A home agora só entrega o HTML puro. O JavaScript cuida de proteger!
+$router->get('/home', [AuthApiController::class, 'home']); 
 
-// Rotas de Criar Conta (Já deixando o espaço guardado!)
-$router->get('/registrar', [AuthController::class, 'registerForm']); // Tela de cadastro
-$router->post('/registrar', [AuthController::class, 'register']);    // Processar o cadastro
 
-// Rotas de Esqueci a Senha
-$router->get('/esqueci-senha', [\App\Controllers\PasswordController::class, 'forgotForm']);
-$router->post('/esqueci-senha', [\App\Controllers\PasswordController::class, 'forgotProcess']);
+// =======================================================
+// ⚙️ 2. ROTAS ANTIGAS DO PHP MONOLÍTICO (Deixei para não quebrar)
+// =======================================================
+$router->post('/login', [AuthController::class, 'login']);
+$router->post('/registrar', [AuthController::class, 'register']);
+$router->post('/esqueci-senha', [PasswordController::class, 'forgotProcess']);
+$router->get('/logout', [AuthController::class, 'logout']);
 
-// Rota protegida (Home)
-$router->get('/home', [AuthController::class, 'home']);
-$router->get('/logout', [App\Controllers\AuthController::class, 'logout']);
-// 2. Executa o roteador para descobrir onde o usuário quer ir
+
+// =======================================================
+// 🚀 3. ROTAS DE API (Backend Novo - Trabalham com JSON e JWT)
+// =======================================================
+// Rota que o seu public/js/login.js usa para pegar o token
+$router->post('/api/login', [AuthApiController::class, 'login']);
+
+// 🛡️ A ROTA PROTEGIDA! O seu public/js/authGuard.js vai bater aqui
+$router->get('/api/validar-acesso', [AuthApiController::class, 'validarAcesso'], [AuthMiddleware::class]);
+
+
+// Liga o motor!
 $router->resolve();

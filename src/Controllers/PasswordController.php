@@ -31,4 +31,8 @@ class PasswordController
         header("Location: /meu-projeto-login/public/esqueci-senha");
         exit;
     }
+
+
 }
+
+

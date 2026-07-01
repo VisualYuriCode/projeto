@@ -13,5 +13,7 @@
             "email": "guimeoplay@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "firebase/php-jwt": "^7.1"
+    }
 }

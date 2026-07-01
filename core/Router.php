@@ -4,55 +4,69 @@ namespace Core;
 
 class Router
 {
-    private array $routes = [];
+    // 💡 CORREÇÃO 1: Declarar a propriedade explicitamente para evitar o erro Deprecated
+    protected array $routes = [];
 
-    // Registra rotas do tipo GET (para carregar páginas)
-    public function get(string $path, array $handler): void
-    {
-        $this->routes['GET'][$path] = $handler;
+    public function get($path, $action, $middleware = []) {
+        $this->routes['GET'][$path] = [
+            'action' => $action, 
+            'middleware' => (array)$middleware // Força a ser um array
+        ];
     }
 
-    // Registra rotas do tipo POST (para processar formulários)
-    public function post(string $path, array $handler): void
-    {
-        $this->routes['POST'][$path] = $handler;
+    public function post($path, $action, $middleware = []) {
+        $this->routes['POST'][$path] = [
+            'action' => $action, 
+            'middleware' => (array)$middleware
+        ];
     }
 
     // Resolve a rota atual acessada pelo usuário
     public function resolve(): void
     {
+        // 1º PASSO: Capturar o método e a URL original
         $method = $_SERVER['REQUEST_METHOD']; // GET ou POST
-        
-        // Pega a URL limpa digitada no navegador
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-        // SOLUÇÃO DEFINITIVA PARA LOCALHOST:
-        // Em vez de fixar o nome da pasta, pegamos o caminho onde o index.php real está rodando
+        // 2º PASSO: Limpar a URL (O Roteador Inteligente do Laragon)
         $scriptName = dirname($_SERVER['SCRIPT_NAME']); // Ex: /meu-projeto-login/public
-        
-        // Se a URL começar com o caminho do script, nós o removemos dinamicamente
         if ($scriptName !== '/' && str_starts_with($uri, $scriptName)) {
             $uri = substr($uri, strlen($scriptName));
         }
-
-        // Garante que o caminho sempre comece com uma barra "/" e remove duplicadas (ex: "//" vira "/")
         $uri = '/' . ltrim($uri, '/');
 
-        // Se a rota existir para o método atual (GET ou POST)
-        if (isset($this->routes[$method][$uri])) {
-            [$controllerClass, $methodName] = $this->routes[$method][$uri];
+        // 3º PASSO: Procurar a rota baseada no método e na URL limpa
+        $route = $this->routes[$method][$uri] ?? false;
 
-            if (class_exists($controllerClass)) {
-                $controller = new $controllerClass();
-                if (method_exists($controller, $methodName)) {
-                    $controller->$methodName();
-                    return;
-                }
-            }
+        // Se a rota não existir, barra aqui com 404
+        if ($route === false) {
+            http_response_code(404);
+            echo "Página não encontrada (404) Erro na Rota. URI tentada: " . htmlspecialchars($uri);
+            exit;
         }
 
-        // Se não encontrar, emite o erro 404
-        http_response_code(404);
-        echo "Página não encontrada (404) Erro na Rota. URI tentada: " . htmlspecialchars($uri);
+        // 4º PASSO: A Mágica do Middleware (O Segurança)
+        $middlewares = $route['middleware'];
+        foreach ($middlewares as $middlewareClass) {
+            $instanciaMiddleware = new $middlewareClass();
+            $instanciaMiddleware->handle(); // O segurança pede o crachá!
+        }
+
+        // 5º PASSO: Executar o Controlador (A Lógica da Página)
+        // Se o código chegou até aqui, é porque o Middleware não barrou a entrada
+        $action = $route['action'];
+        [$controllerClass, $methodName] = $action;
+
+        if (class_exists($controllerClass)) {
+            $controller = new $controllerClass();
+            if (method_exists($controller, $methodName)) {
+                $controller->$methodName();
+                return;
+            }
+        }
+        
+        // Se der algo errado nas classes internas, exibe Erro 500
+        http_response_code(500);
+        echo "Erro Interno (500) Controlador ou Método não encontrado.";
     }
 }
