@@ -4,13 +4,13 @@
 
     // 1. Se não tem token, chuta pro login
     if (!token) {
-        window.location.href = '/meu-projeto-login/public/';
+        window.location.href = '/';
         return;
     }
 
     try {
         // 2. Envia o crachá para a API validar
-        const response = await fetch('/meu-projeto-login/public/api/validar-acesso', {
+        const response = await fetch('/api/validar-acesso', {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + token
@@ -20,7 +20,7 @@
         // 3. Se o token for falso ou expirou
         if (response.status === 401) {
             localStorage.removeItem('token_jwt'); 
-            window.location.href = '/meu-projeto-login/public/';
+            window.location.href = '/';
             return;
         }
 
@@ -33,7 +33,16 @@
             conteudo.classList.remove('d-none');
         }
 
+        // 5. Configura o botão de logout
+        const btnLogout = document.getElementById('btn-logout');
+        if (btnLogout) {
+            btnLogout.addEventListener('click', () => {
+                localStorage.removeItem('token_jwt', 'usuario_nome');
+                window.location.href = '/';
+            });
+    }
+
     } catch (error) {
-        window.location.href = '/meu-projeto-login/public/';
+        window.location.href = '/';
     }
 })();

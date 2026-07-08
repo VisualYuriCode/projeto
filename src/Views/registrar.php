@@ -14,34 +14,18 @@
                 <div class="card shadow-sm">
                     <div class="card-body p-5">
                         <h3 class="text-center mb-4">Criar Nova Conta</h3>
-                        
-                        <?php if (isset($_SESSION['erro_cadastro'])): ?>
-                            <div class="alert alert-danger text-center shadow-sm">
-                                <?= $_SESSION['erro_cadastro']; ?>
-                            </div>
-                            <?php unset($_SESSION['erro_cadastro']); // Limpa a memória após exibir ?>
-                        <?php endif; ?>
 
-                        <?php 
-                        // Resgata os dados antigos se existirem
-                        $oldNome = $_SESSION['old_nome'] ?? '';
-                        $oldEmail = $_SESSION['old_email'] ?? '';
-                        
-                        // Limpa a memória logo em seguida
-                        unset($_SESSION['old_nome'], $_SESSION['old_email']); ?>
-                        
-                        <form action="/meu-projeto-login/public/registrar" method="POST">
+                        <form>
+                            <div class="mb-3">
+                                <label for="nome" class="form-label">Nome</label>
+                                <input type="text" class="form-control" id="nome" name="nome" required placeholder="Seu nome completo">
+                            </div>
 
                             <div class="mb-3">
-                            <label for="nome" class="form-label">Nome</label>
-                            <input type="text" class="form-control" id="nome" name="nome" required placeholder="Seu nome completo" value="<?= htmlspecialchars($oldNome); ?>">
-                        </div>
+                                <label for="email" class="form-label">E-mail</label>
+                                <input type="email" class="form-control" id="email" name="email" required placeholder="seu@email.com">
+                            </div>
 
-                        <div class="mb-3">
-                            <label for="email" class="form-label">E-mail</label>
-                            <input type="email" class="form-control" id="email" name="email" required placeholder="seu@email.com" value="<?= htmlspecialchars($oldEmail); ?>">
-                        </div>
-                            
                             <div class="mb-3">
                                 <label for="senha" class="form-label">Senha</label>
                                 <input type="password" class="form-control" id="senha" name="senha" required placeholder="Crie uma senha segura">
@@ -51,12 +35,12 @@
                                 <label for="senha_confirmacao" class="form-label">Confirme a Senha</label>
                                 <input type="password" class="form-control" id="senha_confirmacao" name="senha_confirmacao" required placeholder="Repita a senha">
                             </div>
-                            
+
                             <button type="submit" class="btn btn-success w-100 mt-4">Cadastrar</button>
                         </form>
-                        
+
                         <div class="text-center mt-4">
-                            <a href="/meu-projeto-login/public/" class="text-decoration-none">Já tenho uma conta (Fazer Login)</a>
+                            <a href="/" class="text-decoration-none">Já tenho uma conta (Fazer Login)</a>
                         </div>
                     </div>
                 </div>
@@ -64,5 +48,6 @@
         </div>
     </div>
 
+    <script src="/js/registrar.js"></script>
 </body>
 </html>

@@ -28,7 +28,7 @@ class PasswordController
             $_SESSION['sucesso_senha'] = "✅ Se o e-mail existir, um link de recuperação foi enviado para ele.";
         }
 
-        header("Location: /meu-projeto-login/public/esqueci-senha");
+        header("Location: /esqueci-senha");
         exit;
     }
 

@@ -8,7 +8,12 @@ use Exception;
 
 class AuthMiddleware 
 {
-    private string $chaveSecreta = "SUA_CHAVE_SECRETA_SUPER_SECRETA";
+    private string $chaveSecreta;
+
+    public function __construct()
+    {
+        $this->chaveSecreta = getenv('JWT_SECRET') ?: 'chave_padrao_insegura';
+    }
 
     public function handle(): void 
     {

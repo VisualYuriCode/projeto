@@ -28,13 +28,13 @@ class AuthController
             $_SESSION['usuario_logado'] = $utilizador->email;
             
             // Redirecionamos ele para a rota da Home
-            header("Location: /meu-projeto-login/public/home");
+            header("Location: /home");
             exit;
             
         } else {
             // FALHA: Salva o erro na Sessão e volta pro Login
             $_SESSION['erro_login'] = "❌ E-mail ou senha incorretos.";
-            header("Location: /meu-projeto-login/public/");
+            header("Location: /");
             exit;
         }
     }
@@ -48,7 +48,7 @@ class AuthController
             
             // Manda de volta para o login com uma mensagem de aviso
             $_SESSION['erro_login'] = "⚠️ Você precisa fazer login para acessar essa página.";
-            header("Location: /meu-projeto-login/public/");
+            header("Location: /");
             exit;
         }
 
@@ -77,7 +77,7 @@ class AuthController
             $_SESSION['erro_cadastro'] = "❌ As senhas não coincidem.";
             $_SESSION['old_nome'] = $nome;   // <-- SALVANDO O NOME
             $_SESSION['old_email'] = $email;
-            header("Location: /meu-projeto-login/public/registrar");
+            header("Location: /registrar");
             exit;
         }
 
@@ -86,7 +86,7 @@ class AuthController
             $_SESSION['erro_cadastro'] = "❌ A senha deve ter pelo menos 8 caracteres.";
             $_SESSION['old_nome'] = $nome;   // <-- SALVANDO O NOME
             $_SESSION['old_email'] = $email; // <-- SALVANDO O E-MAIL
-            header("Location: /meu-projeto-login/public/registrar");
+            header("Location: /registrar");
             exit;
         }
 
@@ -96,7 +96,7 @@ class AuthController
             $_SESSION['erro_cadastro'] = "❌ A senha deve conter pelo menos um carácter especial (ex: @, #, $, %, etc).";
             $_SESSION['old_nome'] = $nome;   // <--- E AQUI TAMBÉM
             $_SESSION['old_email'] = $email;
-            header("Location: /meu-projeto-login/public/registrar");
+            header("Location: /registrar");
             exit;
         }
 
@@ -108,21 +108,21 @@ class AuthController
             $_SESSION['erro_cadastro'] = "❌ Este e-mail já está em uso.";
             $_SESSION['old_nome'] = $nome;   // <-- SALVANDO O NOME
             $_SESSION['old_email'] = $email;
-            header("Location: /meu-projeto-login/public/registrar");
+            header("Location: /registrar");
             exit;
         }
 
         // 4. Sucesso: Criar o utilizador
         if ($userModel->create($nome, $email, $senha)) {
             $_SESSION['sucesso_login'] = "✅ Conta criada com sucesso! Faça o seu login.";
-            header("Location: /meu-projeto-login/public/");
+            header("Location: /");
             exit;
         } else {
             // Se algo falhar na base de dados
             $_SESSION['erro_cadastro'] = "❌ Ocorreu um erro ao criar a conta.";
             $_SESSION['old_nome'] = $nome;   // <-- SALVANDO O NOME
             $_SESSION['old_email'] = $email;
-            header("Location: /meu-projeto-login/public/registrar");
+            header("Location: /registrar");
             exit;
         }
     }
@@ -140,7 +140,7 @@ class AuthController
     }
 
     session_destroy();
-    header("Location: /meu-projeto-login/public/");
+    header("Location: /");
     exit;
     }
 

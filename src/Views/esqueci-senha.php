@@ -26,7 +26,7 @@
                             <?php unset($_SESSION['sucesso_senha']); ?>
                         <?php endif; ?>
                         
-                        <form action="/meu-projeto-login/public/esqueci-senha" method="POST">
+                        <form action="/esqueci-senha" method="POST">
                             <div class="mb-3">
                                 <label for="email" class="form-label">E-mail Cadastrado</label>
                                 <input type="email" class="form-control" id="email" name="email" required placeholder="seu@email.com">
@@ -36,7 +36,7 @@
                         </form>
                         
                         <div class="text-center mt-4">
-                            <a href="/meu-projeto-login/public/" class="text-decoration-none">Voltar para o Login</a>
+                            <a href="/" class="text-decoration-none">Voltar para o Login</a>
                         </div>
                     </div>
                 </div>
