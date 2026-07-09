@@ -17,26 +17,7 @@ class UserModel
         $this->conn = $db->getConnection();
     }
 
-    /**
-     * Procura um utilizador na base de dados através do e-mail.
-     * Útil para o processo de Login.
-     */
-    public function findByEmail(string $email)
-    {
-        // Usamos Prepared Statements (:email) para evitar SQL Injection
-        $query = "SELECT * FROM usuarios WHERE email = :email LIMIT 1";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':email', $email);
-        $stmt->execute();
-
-        // Retorna o objeto do utilizador se encontrar, ou 'false' se não existir
-        return $stmt->fetch();
-    }
-
-    /**
-     * Insere um novo utilizador na base de dados.
-     * Útil para o processo de Criar Conta.
-     */
+    // cria um novo usuario no banco de dados
     public function create(string $nome, string $email, string $senha): bool
     {
         // NUNCA guardamos a palavra-passe em texto limpo! Geramos um Hash seguro.
@@ -49,5 +30,18 @@ class UserModel
         $stmt->bindParam(':senha', $senhaHash);
 
         return $stmt->execute();
+    }
+
+    // para recuperar a conta por email
+    public function findByEmail(string $email)
+    {
+        // Usamos Prepared Statements (:email) para evitar SQL Injection
+        $query = "SELECT * FROM usuarios WHERE email = :email LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+
+        // Retorna o objeto do utilizador se encontrar, ou 'false' se não existir
+        return $stmt->fetch();
     }
 }

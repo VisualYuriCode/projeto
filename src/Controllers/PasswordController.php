@@ -4,13 +4,7 @@ namespace App\Controllers;
 
 class PasswordController
 {
-    // Exibe o formulário de esqueci a senha (GET /esqueci-senha)
-    public function forgotForm(): void
-    {
-        require_once __DIR__ . '/../Views/esqueci-senha.php';
-    }
-
-    // Processa o pedido de recuperação (POST /esqueci-senha)
+    // ainda tudo ficticio sem funcionalidade real
     public function forgotProcess(): void
     {
         $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);

@@ -1,4 +1,5 @@
 Plaintext
 
 /vendor/
-/.env/
+/.env/.env
+.env
